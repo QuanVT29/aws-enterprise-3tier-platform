@@ -11,6 +11,8 @@ An end-to-end, production-grade cloud infrastructure engineered on Amazon Web Se
 
 ---
 
+<br>
+
 ## 📌 Executive Summary & Key Metrics
 
 This project demonstrates the transition from traditional, monolithic cloud deployments to an automated, auditable, and resilient enterprise ecosystem.
@@ -28,6 +30,8 @@ This project demonstrates the transition from traditional, monolithic cloud depl
 
 ---
 
+<br>
+
 ## 🏗️ Architecture Blueprint
 
 ### 1. High-Level Enterprise Architecture
@@ -41,6 +45,9 @@ Infrastructure, security gates, application deployment, observability, and failo
 ![Pipeline Blueprint](docs/images/pipeline-diagram.png)
 
 ---
+
+<br>
+<br>
 
 ## 🧭 5-Phase Implementation Breakdown
 
@@ -87,6 +94,9 @@ Infrastructure, security gates, application deployment, observability, and failo
 *   **Empirical DR Drill:** Rigorous regional failover tests measuring and validating exact RTO and RPO metrics against SLA commitments.
 
 ---
+
+<br>
+<br>
 
 ## 📂 Repository Layout
 
