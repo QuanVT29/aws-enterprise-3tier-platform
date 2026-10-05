@@ -4,7 +4,18 @@
 
 The primary objective of Phase 1 is to establish a resilient, highly available, and secure 3-Tier infrastructure foundation inside Amazon Web Services (AWS) using **Terraform**. This tier strictly separates responsibilities across network zones, isolates stateful storage from the public internet, and adheres to a **Zero-Trust operational model** (zero administrative inbound ports open).
 
-[ Internet Traffic ]│ (HTTPS :443)▼[ Application Load Balancer (ALB) ]  <-- Public Subnets (AZ-A & AZ-B)│ (HTTP Forward :8080)▼[ Auto Scaling Group (EC2 Graviton) ] <-- Private Application Subnets (AZ-A & AZ-B)│ (TCP :5432 / :3306)▼[ Amazon RDS Multi-AZ DB ]           <-- Isolated Database Subnets (AZ-A & AZ-B)
+```text
+[ Internet Traffic ]
+        │
+        ▼ (HTTPS :443)
+[ Application Load Balancer (ALB) ]        <-- Public Subnets (AZ-A & AZ-B)
+        │
+        ▼ (HTTP Forward :8080)
+[ Auto Scaling Group (EC2 Graviton) ]      <-- Private Application Subnets (AZ-A & AZ-B)
+        │
+        ▼ (TCP :5432 / :3306)
+[ Amazon RDS Multi-AZ DB ]                 <-- Isolated Database Subnets (AZ-A & AZ-B)
+```
 ---
 
 ## 2. Infrastructure Components Specification
@@ -192,9 +203,13 @@ aws ec2 describe-route-tables \
 
 <br>
 
-## 6. Challenges Encountered & Resolutions
+### 6. Challenges Encountered & Resolutions
 
-Challenge / ErrorRoot Cause AnalysisRemediationALB Target Group Health Checks Failing (502 Bad Gateway)Application failed to bind to port 8080 prior to ALB initial check expiration.Added systemctl enable --now app.service within user_data.sh and extended health check grace_period to 180s.Metadata Retrieval Failure on Graviton (HTTP 401 Unauthorized)EC2 Launch Template defaulted to IMDSv1 tokenless queries, but IMDSv2 token enforcement was mandated.Refactored application startup script to fetch a session token via PUT /api/token before querying instance metadata.RDS Subnet Creation ErrorRDS DB Subnet Group requires subnets in at least two distinct Availability Zones.Explicitly bound the aws_db_subnet_group resource to both isolated-db-az-a and isolated-db-az-b.
+| Challenge / Error | Root Cause Analysis | Remediation |
+| :--- | :--- | :--- |
+| **ALB Target Group Health Checks Failing (502 Bad Gateway)** | Application failed to bind to port 8080 prior to ALB initial check expiration. | Added `systemctl enable --now app.service` within `user_data.sh` and extended health check `grace_period` to 180s. |
+| **Metadata Retrieval Failure on Graviton (HTTP 401 Unauthorized)** | EC2 Launch Template defaulted to IMDSv1 tokenless queries, but IMDSv2 token enforcement was mandated. | Refactored application startup script to fetch a session token via `PUT /api/token` before querying instance metadata. |
+| **RDS Subnet Creation Error** | RDS DB Subnet Group requires subnets in at least two distinct Availability Zones. | Explicitly bound the `aws_db_subnet_group` resource to both `isolated-db-az-a` and `isolated-db-az-b`. |
 
 
 
