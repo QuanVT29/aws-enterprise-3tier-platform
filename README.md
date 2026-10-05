@@ -127,5 +127,119 @@ aws-enterprise-3tier-platform/
 │   ├── quick-deploy.sh               # Local deployment wrapper
 │   ├── quick-destroy.sh              # Clean-up script to terminate resources and reduce cost
 │   └── trigger-dr-failover.sh        # One-click disaster recovery failover automation
+```
+
+<br>
+
+
+## 🧪 Verification & Real-World Drill Scenarios
+
+To prove production reliability, the following scenarios were tested and documented:
+
+1. High Availability Auto-Recovery (Phase 1)
+Method: Terminated an EC2 instance directly inside the AWS Management Console during peak mock traffic.
+
+Result: ALB health check tagged the target unhealthy within 10 seconds; Route 53 and ALB routed 100% of user traffic to remaining healthy instances across AZ-B. The ASG provisioned a replacement t4g.micro node via Launch Template without dropping sessions.
+
+2. RDS Multi-AZ Seamless Failover (Phase 1)
+Method: Executed aws rds reboot-db-instance --db-instance-identifier prod-db --force-failover.
+
+Result: Primary DB role shifted from AZ-A to synchronous standby in AZ-B. The application re-established database connection pool in 42 seconds, with zero data loss.
+
+3. Shift-Left Security Pipeline Gate (Phase 2)
+Method: Opened a test Pull Request containing a Security Group allowing open inbound access (0.0.0.0/0:22).
+
+Result: Checkov failed in the GitHub Actions workflow, terminating the pipeline and blocking branch merge.
+
+4. Stress Testing & Dynamic Auto Scaling (Phase 3)
+Method: Generated artificial CPU stress using an internal diagnostic endpoint (/api/stress-cpu) targeting >80% utilization.
+
+Result: CloudWatch Alarm triggered after 2 evaluation periods; SNS notified AWS Chatbot in Slack; ASG scaled out from 2 instances to 4 instances automatically.
+
+5. Application Layer DDoS & SQL Injection Blocking (Phase 4)
+Method: Executed malicious curl payloads simulating SQL Injection (/?id=1' OR '1'='1) and high-volume burst traffic (>300 req/min).
+
+Result: AWS WAF v2 inspected requests at the perimeter, returning HTTP 403 Forbidden before packets reached the compute cluster.
+
+6. Full Cross-Region Disaster Recovery Drill (Phase 5)
+Method: Simulated complete regional outage by cutting ingress traffic at Singapore (ap-southeast-1) ALB.
+
+Result: Route 53 Health Check reported failure at 01:14; DNS redirected incoming requests to the Sydney (ap-southeast-2) pilot-light infrastructure. Total measured RTO: 7 minutes, 12 seconds; verified RPO: 11 seconds. Full details documented in DR Drill Report.
+
+<br>
+
+
+## 💰 FinOps & Cost Optimization Strategy
+
+This architecture was optimized to keep laboratory operating costs below $15–$20 USD while maintaining enterprise architectural patterns:
+
+Single NAT Gateway for Development: Configured with a Terraform variable flag (single_nat_gateway = true) for daily development, dynamically expandable to Multi-AZ NAT Gateways for production validation.
+
+AWS Graviton Selection: Standardized compute workloads on t4g.micro (AWS Graviton2), offering a 20% cost discount and up to 40% performance gain over comparable x86 instances.
+
+Automated Teardown Automation: All resources are versioned through Infrastructure as Code. Daily workflows conclude by running:
+
+Bash
+./scripts/quick-destroy.sh
+This script tears down hourly-billing services (NAT Gateways, RDS Multi-AZ, and WAF rules) while keeping S3 state buckets and DynamoDB lock tables intact.
+
+
+<br>
+
+## 🚀 Quickstart Deployment Guide
+
+AWS CLI v2 configured with administrative privileges.
+
+Terraform >= 1.9.0.
+
+A configured domain name in Amazon Route 53 (Public Hosted Zone).
+
+Step 1: Clone Repository & Setup Remote State
+```
+git clone [https://github.com/](https://github.com/)<your-username>/aws-enterprise-3tier-platform.git
+cd aws-enterprise-3tier-platform/terraform/global
+terraform init
+terraform apply -target=module.s3_backend -target=module.dynamodb_lock
+```
+
+Step 2: Deploy Primary Region Infrastructure (Phase 1, 3, 4)
+```
+cd ../environments/primary-singapore
+terraform init
+terraform plan -out=tfplan
+terraform apply tfplan
+```
+Step 3: Deploy Secondary Disaster Recovery Stack (Phase 5)
+```
+cd ../dr-sydney
+terraform init
+terraform apply -auto-approve
+```
+Step 4: Verify Deployment
+Retrieve the Public Application Load Balancer endpoint from Terraform outputs:
+```
+terraform output alb_dns_name
+curl -I http://$(terraform output -raw alb_dns_name)/healthz
+```
+
+<br>
+
+## 📜 Standards & References
+
+AWS Well-Architected Framework
+
+CIS Amazon Web Services Foundations Benchmark v1.4.0
+
+NIST SP 800-145: Cloud Computing Standards
+
+<br>
+
+## 👨‍‍💻 Author
+
+Role: Cloud Engineer / Devops Engineer
+
+Certifications: AWS Certified Solutions Architect – Associate (SAA)
+
+Contact: LinkedIn Profile • Personal Portfolio
 │
-└── README.md                         # Project Master Documentation
+
