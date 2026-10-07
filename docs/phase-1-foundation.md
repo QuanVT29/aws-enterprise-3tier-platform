@@ -1,5 +1,7 @@
 # Phase 1: Multi-AZ High Availability Foundation (IaC & Zero-Trust)
 
+<br>
+
 ## 1. Architectural Scope & Objectives
 
 The primary objective of Phase 1 is to establish a resilient, highly available, and secure 3-Tier infrastructure foundation inside Amazon Web Services (AWS) using **Terraform**. This tier strictly separates responsibilities across network zones, isolates stateful storage from the public internet, and adheres to a **Zero-Trust operational model** (zero administrative inbound ports open).
@@ -17,6 +19,8 @@ The primary objective of Phase 1 is to establish a resilient, highly available, 
 [ Amazon RDS Multi-AZ DB ]                 <-- Isolated Database Subnets (AZ-A & AZ-B)
 ```
 ---
+
+<br>
 
 ## 2. Infrastructure Components Specification
 
@@ -48,6 +52,8 @@ The primary objective of Phase 1 is to establish a resilient, highly available, 
 - **Dynamic Credential Handling:** DB connection strings and master passwords are generated and stored in **AWS Secrets Manager**. Instances leverage an attached IAM Instance Profile to query secrets dynamically at runtime without hardcoded files.
 
 ---
+
+<br>
 
 ## 3. Terraform Directory Layout
 
@@ -83,6 +89,8 @@ terraform/
         └── variables.tf
 ```
 
+<br>
+
 ### 4. Step-by-Step Provisioning GuideStep
 
 4.1: Remote State Initialization
@@ -116,6 +124,8 @@ terraform plan -out=phase1.tfplan
 # Apply configuration
 terraform apply "phase1.tfplan"
 ```
+
+<br>
 
 ## 5. Verification & Testing Scenarios
 
