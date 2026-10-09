@@ -110,8 +110,12 @@ aws dynamodb create-table \
   --region ap-southeast-1
 ```
 
-Step 4.2: Infrastructure DeploymentNavigate to the primary environment directory and execute deployment:Bashcd terraform/environments/primary-singapore
+Step 4.2: Infrastructure Deployment
+
 ```
+# Navigate to the primary environment directory and execute deployment:
+cd terraform/environments/primary-singapore
+
 # Initialize Terraform plugins and configure backend
 terraform init
 
