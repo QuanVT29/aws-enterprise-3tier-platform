@@ -146,7 +146,8 @@ aws ssm start-session --target "$INSTANCE_ID"
 ```
 
 - Verification Criteria: Interactive shell session connects successfully. Port 22 connectivity tests to the host return connection timeouts or refused packets.
-
+  
+![SSM Session Manager Terminal](images/proof-ssm-session.png)
 <br>
 
 ### Scenario 2: EC2 Auto-Healing & Multi-AZ Rebalancing
@@ -168,6 +169,10 @@ aws ec2 terminate-instances --instance-ids "$INSTANCE_ID"
 3. ASG triggers an instance-refresh event, launching a new Graviton t4g.micro node in the corresponding AZ.
    
 4. Continuous HTTP pings to the ALB DNS name maintain 200 OK status with zero 5xx response codes.
+
+![ALB Target Group Health Status](proof-asg-autohealing.png)
+
+![Web App Metadata Output](images/proof-app-multi-az.png)
 
 <br>
 
@@ -192,6 +197,8 @@ aws rds reboot-db-instance \
 
 4. Total Measured Downtime: 44 seconds (within the sub-60s SLA commitment).
 
+![RDS Failover Events Log](images/proof-rds-failover-events.png)
+
 <br>
 
 ### Scenario 4: Strict Network Layer Isolation Audit
@@ -210,6 +217,8 @@ aws ec2 describe-route-tables \
   --query "RouteTables[*].Routes"
 ```
 - Verification Criteria: Routes must strictly contain local VPC CIDR (10.0.0.0/16 -> local). No entries pointing to 0.0.0.0/0 via nat-xxxx or igw-xxxx.
+
+![Isolated Subnet Route Table](images/proof-isolated-route-table.png)
 
 <br>
 
