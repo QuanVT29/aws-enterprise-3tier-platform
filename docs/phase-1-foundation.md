@@ -19,7 +19,7 @@ The primary objective of Phase 1 is to establish a resilient, highly available, 
 [ Amazon RDS Multi-AZ DB ]                 <-- Isolated Database Subnets (AZ-A & AZ-B)
 ```
 ---
-
+![Phase 1 Architecture](images/phase1-3tier-architecture.png)
 <br>
 
 ## 2. Infrastructure Components Specification
