@@ -174,7 +174,7 @@ aws ec2 terminate-instances --instance-ids "$INSTANCE_ID"
    
 4. Continuous HTTP pings to the ALB DNS name maintain 200 OK status with zero 5xx response codes.
 
-![ALB Target Group Health Status](proof-asg-autohealing.png)
+![](images/proof-asg-autohealing.png)
 
 ![Web App Metadata Output](images/proof-app-multi-az.png)
 
