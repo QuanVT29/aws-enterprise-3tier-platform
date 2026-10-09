@@ -1,0 +1,13 @@
+{
+  "name": "cloud-diagnostic-app",
+  "version": "1.0.0",
+  "description": "Enterprise Cloud Infrastructure Diagnostic & Testing App",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pg": "^8.11.5"
+  }
+}
