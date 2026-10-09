@@ -192,14 +192,6 @@ aws rds reboot-db-instance \
   --force-failover
 ```
 
-- Measured Result:
-1. Primary node marked as rebooting at $T+0s$.
-
-2. Standby replica promoted to Primary at $T+38s$.
-  
-3. Application automatically re-established connection pooling at $T+44s$.
-
-4. Total Measured Downtime: 44 seconds (within the sub-60s SLA commitment).
 
 ![RDS Failover Events Log](images/proof-rds-failover-events.png)
 
