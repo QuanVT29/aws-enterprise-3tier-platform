@@ -216,4 +216,8 @@ done
 
 ## 6. Challenges Encountered & Resolutions
 
-Challenge / IncidentRoot Cause AnalysisRemediationsts:AssumeRoleWithWebIdentity Access DeniedThe IAM Trust Policy StringEquals condition contained a minor typo in the repository name claim.Corrected the trust policy subject claim format to repo:<org>/<repo>:ref:refs/heads/main.CodeDeploy ValidateService Hook TimeoutThe application daemon took 8 seconds to bind to port 8080, but curl was executed immediately.Added a retry loop with sleep intervals within validate_service.sh to await successful HTTP 200 response.Checkov Baseline DiscrepanciesLocal development environments ran a different version of Checkov than the GitHub Actions runner.Pinned the exact container image version of Checkov (bridgecrew/checkov:3.x) inside the workflow definition.
+| Challenge / Incident | Root Cause Analysis | Remediation |
+| :--- | :--- | :--- |
+| **`sts:AssumeRoleWithWebIdentity` Access Denied** | The IAM Trust Policy `StringEquals` condition contained a minor typo in the repository name claim. | Corrected the trust policy subject claim format to `repo:<org>/<repo>:ref:refs/heads/main`. |
+| **CodeDeploy `ValidateService` Hook Timeout** | The application daemon took 8 seconds to bind to port 8080, but curl was executed immediately. | Added a retry loop with sleep intervals within `validate_service.sh` to await successful HTTP 200 response. |
+| **Checkov Baseline Discrepancies** | Local development environments ran a different version of Checkov than the GitHub Actions runner. | Pinned the exact container image version of Checkov (`bridgecrew/checkov:3.x`) inside the workflow definition. |
