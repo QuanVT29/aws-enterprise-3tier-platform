@@ -81,26 +81,27 @@ Adhering to DevSecOps principles, this phase establishes:
 
 ## 3. Pipeline Directory Layout
 
+
+```text
 aws-enterprise-3tier-platform/
 ├── .github/
 │   └── workflows/
-│       ├── iac-security-scan.yml   # Shift-Left Security Scanners (PR Trigger)
-│       └── release-deploy.yml      # OIDC Auth, Staging & Production Deployment
-│
+│       ├── iac-security-scan.yml      # Shift-Left Security Scanners (PR Trigger)
+│       └── release-deploy.yml         # OIDC Auth, Staging & Production Deployment
 ├── app/
-│   ├── appspec.yml                 # CodeDeploy deployment specification
+│   ├── appspec.yml                    # CodeDeploy deployment specification
 │   ├── scripts/
-│   │   ├── stop_server.sh          # ApplicationStop hook
-│   │   ├── before_install.sh       # BeforeInstall hook
-│   │   ├── after_install.sh        # AfterInstall hook
-│   │   ├── start_server.sh         # ApplicationStart hook
-│   │   └── validate_service.sh     # ValidateService hook
+│   │   ├── stop_server.sh             # ApplicationStop hook
+│   │   ├── before_install.sh          # BeforeInstall hook
+│   │   ├── after_install.sh           # AfterInstall hook
+│   │   ├── start_server.sh            # ApplicationStart hook
+│   │   └── validate_service.sh        # ValidateService hook
 │   └── src/
-│       └── server.js               # Application source code
-│
-├── terraform/
-│   └── global/
-│       └── oidc.tf                 # IAM OIDC Provider and Execution Roles
+│       └── server.js                  # Application source code
+└── terraform/
+    └── global/
+        └── oidc.tf                    # IAM OIDC Provider and Execution Roles
+```
 
 
 <br>
