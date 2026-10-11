@@ -14,7 +14,7 @@ permissions:
 env:
   AWS_REGION: "ap-southeast-1"
   OIDC_ROLE_ARN: "arn:aws:iam::222634368199:role/github-actions-enterprise-deployer-role"
-  S3_ARTIFACT_BUCKET: "enterprise-codedeploy-artifacts-20261011090153246700000001"
+  S3_ARTIFACT_BUCKET: "enterprise-codedeploy-artifacts-apse1-222634368199"
   CODEDEPLOY_APP_NAME: "prod-enterprise-app"
   CODEDEPLOY_GROUP_NAME: "prod-enterprise-asg-dg"
 
