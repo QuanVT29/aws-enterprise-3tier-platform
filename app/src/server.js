@@ -108,7 +108,7 @@ app.get('/', async (req, res) => {
   </head>
   <body>
     <div class="container">
-      <h1>🚀 AWS Enterprise 3-Tier Diagnostic Hub</h1>
+      <h1>🚀 AWS Enterprise 3-Tier Diagnostic Hub v2.0</h1>
       <div class="grid">
         <div class="card">
           <div class="label">Instance ID</div>
