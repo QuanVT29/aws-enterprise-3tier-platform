@@ -98,6 +98,7 @@ resource "aws_iam_role" "github_actions_deployer" {
             "token.actions.githubusercontent.com:sub" = [
               "repo:${var.github_repository}:*",
               "repo:${lower(var.github_repository)}:*",
+              "repo:QuanVT29*aws-enterprise-3tier-platform*:*",
               "repo:*:*aws-enterprise-3tier-platform:*"
             ]
           }
