@@ -9,6 +9,15 @@ echo "==> [Step 1/5] Updating OS packages and installing system runtimes..."
 dnf update -y
 dnf install -y nodejs npm git
 
+echo "==> Install AWS CodeDeploy Agent"
+dnf install -y ruby wget
+cd /tmp
+wget https://aws-codedeploy-ap-southeast-1.s3.ap-southeast-1.amazonaws.com/latest/install
+chmod +x ./install
+./install auto
+systemctl enable --now codedeploy-agent
+
+
 echo "==> [Step 2/5] Creating application directory structure..."
 mkdir -p /opt/app
 cd /opt/app

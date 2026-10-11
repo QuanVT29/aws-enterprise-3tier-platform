@@ -1,0 +1,65 @@
+name: Shift-Left Security & IaC Linting Gate
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'terraform/**'
+      - 'app/**'
+  workflow_dispatch:
+
+jobs:
+  tflint-analysis:
+    name: Lint Infrastructure (TFLint)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup TFLint Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.tflint.d/plugins
+          key: ${{ runner.os }}-tflint
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: "v0.50.0"
+
+      - name: Initialize and Execute TFLint
+        run: |
+          tflint --init
+          tflint --recursive --minimum-failure-severity=error
+
+  checkov-security-scan:
+    name: Security & CIS Compliance Scan (Checkov)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run Checkov Static Analysis
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: terraform/
+          framework: terraform
+          soft_fail: false # Force fail pipeline if there are critical security vulnerabilities
+          output_format: cli
+          quiet: true
+
+  trivy-dependency-scan:
+    name: Vulnerability Scan (Trivy)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run Trivy Vulnerability Scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: 'app/'
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1' # Exit 1 to lock PR if there are critical security vulnerabilities

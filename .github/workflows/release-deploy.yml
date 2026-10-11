@@ -1,0 +1,67 @@
+name: Production Release & Zero-Downtime Deployment
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'app/**'
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # Force to take OIDC JWT token from GitHub
+  contents: read
+
+env:
+  AWS_REGION: "ap-southeast-1"
+  OIDC_ROLE_ARN: "arn:aws:iam::222634368199:role/github-actions-enterprise-deployer-role"
+  S3_ARTIFACT_BUCKET: "enterprise-codedeploy-artifacts-20261011090153246700000001"
+  CODEDEPLOY_APP_NAME: "prod-enterprise-app"
+  CODEDEPLOY_GROUP_NAME: "prod-enterprise-asg-dg"
+
+jobs:
+  build-and-deploy:
+    name: Package and Deploy via CodeDeploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository Source
+        uses: actions/checkout@v4
+
+      - name: Authenticate to AWS via OIDC Federation
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.OIDC_ROLE_ARN }}
+          role-session-name: GitHubActions-EnterpriseDeployment
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Bundle Application Artifacts
+        run: |
+          mkdir -p build_output
+          cd app
+          # Package appspec.yml, scripts and source code into file zip
+          zip -r ../build_output/deployment-${{ github.sha }}.zip appspec.yml package.json src/ scripts/
+          cd ..
+
+      - name: Upload Revision to S3 Storage
+        run: |
+          aws s3 cp build_output/deployment-${{ github.sha }}.zip \
+            s3://${{ env.S3_ARTIFACT_BUCKET }}/revisions/deployment-${{ github.sha }}.zip
+
+      - name: Trigger AWS CodeDeploy Deployment
+        run: |
+          DEPLOYMENT_ID=$(aws deploy create-deployment \
+            --application-name ${{ env.CODEDEPLOY_APP_NAME }} \
+            --deployment-group-name ${{ env.CODEDEPLOY_GROUP_NAME }} \
+            --deployment-config-name CodeDeployDefault.OneAtATime \
+            --description "Automated deployment for commit ${{ github.sha }}" \
+            --s3-location bucket=${{ env.S3_ARTIFACT_BUCKET }},bundleType=zip,key=revisions/deployment-${{ github.sha }}.zip \
+            --query "deploymentId" \
+            --output text)
+
+          echo "Deployment initiated successfully with ID: $DEPLOYMENT_ID"
+          echo "DEPLOYMENT_ID=$DEPLOYMENT_ID" >> $GITHUB_ENV
+
+      - name: Monitor Deployment Status
+        run: |
+          echo "Awaiting deployment completion for: $DEPLOYMENT_ID..."
+          aws deploy wait deployment-successful --deployment-id $DEPLOYMENT_ID
+          echo "Deployment $DEPLOYMENT_ID completed successfully with zero downtime!"
