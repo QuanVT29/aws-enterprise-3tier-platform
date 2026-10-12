@@ -180,7 +180,6 @@ for i in {1..5}; do curl -s "$ALB_URL/api/simulate-500"; sleep 1; done
 +The metric Error500Count reflects an instantaneous spike corresponding to the 5 dispatched requests.
 
 ![](images/proof-log-metric-filter-1.png)
-
 ![](images/proof-log-metric-filter-2.png)
 
 <br>
