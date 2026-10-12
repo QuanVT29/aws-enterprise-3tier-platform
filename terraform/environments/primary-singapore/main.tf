@@ -57,3 +57,18 @@ module "asg" {
   db_name     = module.rds.db_name
   db_password = module.security.db_generated_password
 }
+
+
+
+# 7. OBSERVABILITY & INCIDENT RESPONSE (PHASE 3)
+module "observability" {
+  source                  = "../../modules/observability"
+  environment             = var.environment
+  aws_region              = var.aws_region
+  alb_arn_suffix          = module.alb.alb_arn_suffix
+  target_group_arn_suffix = module.alb.target_group_arn_suffix
+  asg_name                = module.asg.asg_name
+  db_instance_id          = module.rds.db_instance_identifier
+  alb_dns_name            = module.alb.alb_dns_name
+  alert_email             = var.alert_email
+}

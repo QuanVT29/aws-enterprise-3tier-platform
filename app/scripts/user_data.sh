@@ -18,6 +18,65 @@ chmod +x ./install
 systemctl enable --now codedeploy-agent
 
 
+echo "==> [Observability] Install and configure Amazon CloudWatch Unified Agent"
+dnf install -y amazon-cloudwatch-agent
+
+cat <<'EOF' > /opt/aws/amazon-cloudwatch-agent/bin/config.json
+{
+  "agent": {
+    "metrics_collection_interval": 60,
+    "run_as_user": "root"
+  },
+  "metrics": {
+    "namespace": "CWAgent",
+    "metrics_collected": {
+      "mem": {
+        "measurement": [
+          "mem_used_percent"
+        ],
+        "metrics_collection_interval": 60
+      },
+      "disk": {
+        "measurement": [
+          "disk_used_percent"
+        ],
+        "metrics_collection_interval": 60,
+        "resources": [
+          "/"
+        ]
+      }
+    },
+    "append_dimensions": {
+      "AutoScalingGroupName": "$${aws:AutoScalingGroupName}",
+      "InstanceId": "$${aws:InstanceId}"
+    }
+  },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/var/log/messages",
+            "log_group_name": "/aws/ec2/enterprise-app",
+            "log_stream_name": "{instance_id}-system"
+          }
+        ]
+      }
+    }
+  }
+}
+EOF
+
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -a fetch-config \
+  -m ec2 \
+  -s \
+  -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json
+
+systemctl enable amazon-cloudwatch-agent
+
+
+
 echo "==> [Step 2/5] Creating application directory structure..."
 mkdir -p /opt/app
 cd /opt/app
@@ -258,3 +317,6 @@ systemctl daemon-reload
 systemctl enable --now cloud-app.service
 
 echo "==> Bootstrap process complete. Service running on port 8080."
+
+
+
