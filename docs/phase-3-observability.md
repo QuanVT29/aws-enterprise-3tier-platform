@@ -154,7 +154,7 @@ aws-enterprise-3tier-platform/
 
 +Canary Widget: Displays heartbeat uptime and probe latency.
 
-![](images/proof-cloudwatch-dashboard)
+![](images/proof-cloudwatch-dashboard.png)
 
 <br>
 
@@ -179,9 +179,9 @@ for i in {1..5}; do curl -s "$ALB_URL/api/simulate-500"; sleep 1; done
 
 +The metric Error500Count reflects an instantaneous spike corresponding to the 5 dispatched requests.
 
-![](images/proof-log-metric-filter-1)
+![](images/proof-log-metric-filter-1.png)
 
-![](images/proof-log-metric-filter-2)
+![](images/proof-log-metric-filter-2.png)
 
 <br>
 
@@ -200,7 +200,7 @@ for i in {1..5}; do curl -s "$ALB_URL/api/simulate-500"; sleep 1; done
 
 +Visual screenshot captured by the Puppeteer headless browser confirms valid endpoint payload.
 
-![](images/proof-canary-heartbeat)
+![](images/proof-canary-heartbeat.png)
 
 <br>
 
@@ -236,7 +236,7 @@ Observations & Measured Result:
 +Actionable Runbook URL: Link to incident-runbook.md.
 
 
-![](images/proof-alarm-chatops)
+![](images/proof-alarm-chatops.png)
 
 <br>
 
