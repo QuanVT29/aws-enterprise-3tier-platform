@@ -15,6 +15,8 @@ This runbook defines operational guidelines and triaging steps for on-call engin
 ## 2. Standard Operating Procedures (SOPs)
 
 <a id="high-cpu"></a>
+
+
 ### SOP-01: High CPU Saturation (`Enterprise-App-HighCPU-Alarm`)
 
 #### Symptoms
@@ -28,4 +30,98 @@ This runbook defines operational guidelines and triaging steps for on-call engin
    aws ssm start-session --target <INSTANCE_ID> --region ap-southeast-1
    ```
 
+3. Inspect running OS processes using top or htop:
+```
+top -b -n 1 -o %CPU | head -n 20
+```
 
+4. Verify if compute saturation is caused by genuine user traffic bursts or an internal CPU stress loop (/api/stress-cpu).
+
+#### Remediation
+
+- Temporary Mitigation: Manually increase Auto Scaling Group desired capacity:
+```
+aws autoscaling set-desired-capacity \
+  --auto-scaling-group-name <ASG_NAME> \
+  --desired-capacity 4 \
+  --region ap-southeast-1
+```
+
+- Long-term Fix: Refactor resource-heavy algorithms or adjust instance type within Launch Template from t4g.micro to t4g.small.
+
+
+<br>
+
+
+### SOP-02: Elevated Application Exceptions (Enterprise-App-High500Errors-Alarm)
+
+#### Symptoms
+
+- Alarm State: ALARM on metric CustomApp/Diagnostics/Error500Count >= 3.
+
+- Spike observed in ALB HTTPCode_Target_5XX_Count.
+
+#### Triage Steps
+
+1. Open CloudWatch Log Insights.
+
+2. Select Log Group /aws/ec2/enterprise-app and execute query:
+```
+SQL
+fields @timestamp, @message
+| filter @message like /ERROR/ or @message like /Fatal/
+| sort @timestamp desc
+| limit 50
+```
+3. Correlate timestamps with the latest CodeDeploy deployment ID to verify if a regression was introduced by a recent release.
+
+#### Remediation
+
+- If exceptions originate from a faulty deployment, trigger an immediate CodeDeploy rollback:
+```
+aws deploy stop-deployment --deployment-id <DEPLOYMENT_ID> --auto-rollback-enabled
+```
+
+- If exceptions point to database connection pool timeouts, inspect RDS connection saturation on the dashboard.
+
+
+
+<br>
+
+
+### SOP-03: Outside-In Synthetic Canary Failure (Enterprise-Canary-Availability-Alarm)
+
+#### Symptoms
+
+- Alarm State: ALARM on CloudWatchSynthetics/SuccessPercent < 100%.
+
+- Endpoint probe returned an HTTP code other than 200 or experienced request timeout (> 2000ms).
+
+
+#### Triage Steps:
+
+1. Navigate to AWS Console $\rightarrow$ CloudWatch $\rightarrow$ Synthetics Canaries $\rightarrow$ app-health-canary.
+
+2. Inspect the latest Execution Run tab:
+
+- Review probe execution logs.
+
+- Inspect the automated Screenshot captured by the headless browser during failure.
+
+3. Validate ALB listener status and target group health:
+```
+aws elbv2 describe-target-health \
+  --target-group-arn <TARGET_GROUP_ARN> \
+  --region ap-southeast-1
+```
+
+#### Remediation:
+
+- If all targets indicate unhealthy, inspect EC2 instance user_data logs:
+
+```
+tail -n 100 /var/log/user-data.log
+systemctl status cloud-app.service
+```
+
+- Verify Public ALB Security Group ingress rules to ensure port 80/443 traffic has not been accidentally restricted.
