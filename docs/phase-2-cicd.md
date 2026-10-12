@@ -9,33 +9,11 @@ Adhering to DevSecOps principles, this phase establishes:
 - **Shift-Left Security Gate:** Automated policy-as-code and vulnerability checks on every Pull Request.
 - **Automated Rolling Updates:** Zero-downtime deployments integrated directly with the Phase 1 Application Load Balancer and Auto Scaling Group.
 
-```text
-  [ Developer ]
-        │ (git push / Pull Request)
-        ▼
-  [ GitHub Repository ]
-        │
-        ├──> [ Trigger: Shift-Left Security Gate ]
-        │         ├── TFLint (Syntax & Best Practices)
-        │         ├── Checkov (IaC Misconfigurations)
-        │         └── Trivy (Dependency & Package CVEs)
-        │
-        ▼ (PR Merged / Push to Main)
-  [ AWS IAM OIDC Auth ] ──(Exchange JWT for Short-lived STS Token)──> [ AWS Cloud ]
-        │
-        ▼ (Stage 1)
-  [ Deploy to Staging ]
-        │
-        ▼ (Stage 2: Manual Approval Gate)
-  [ GitHub Environment Protection Review ]
-        │
-        ▼ (Stage 3)
-  [ AWS CodeDeploy ] ──(Rolling Update + Health Check)──> [ EC2 ASG Instances ]
-```
+
+![](images/phase2-pipeline-architecture.png )
 
 <br>
 
-![](images/phase2-pipeline-architecture.png )
 
 ## 2. Technical Specifications & Toolchain
 
