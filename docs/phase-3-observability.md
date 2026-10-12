@@ -15,6 +15,7 @@ Key capabilities delivered:
 - **Automated Incident Alerting:** Incident dispatching via Amazon SNS to ChatOps channels (Slack / Discord / Email) with actionable runbooks.
 
 
+![](images/phase3-observability-architecture.png)
 
 <br>
 
