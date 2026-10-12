@@ -35,6 +35,7 @@ Adhering to DevSecOps principles, this phase establishes:
 
 <br>
 
+![](images/phase2-pipeline-architecture.png )
 
 ## 2. Technical Specifications & Toolchain
 
@@ -162,6 +163,9 @@ Upon merging into main:
 - Execution: Trigger a workflow run and inspect the execution log of the aws-actions/configure-aws-credentials action.
 
 - Verification Criteria: The runner assumes the designated IAM role via sts:AssumeRoleWithWebIdentity, displaying an authenticated AWS Account ID and temporary session identifier.
+
+![](images/proof-oidc-auth.png)
+
 
 ### Scenario 2: Shift-Left Security Gate Enforces Policy-as-Code
 
