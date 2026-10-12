@@ -254,4 +254,8 @@ Observations & Measured Result:
 ## 6. Challenges Encountered & Resolutions
 
 
-Challenge / Metric DriftRoot Cause AnalysisRemediationMissing RAM Metrics in CloudWatchCloudWatch Unified Agent was missing permissions to publish to the CWAgent namespace.Attached CloudWatchAgentServerPolicy to the EC2 IAM Instance Profile in modules/security.Synthetics Canary Ingress BlockSecurity group on Public ALB rejected requests from the AWS Lambda Synthetics execution runtime.Added an explicit ingress rule in modules/security_groups/alb permitting standard HTTP/HTTPS traffic.Metric Filter False NegativesApplication log pattern output varied slightly in JSON formatting between environment releases.Updated filter expression to use flexible token matching: [..., status = 500, ...]
+| Challenge / Incident | Root Cause Analysis | Remediation |
+| :--- | :--- | :--- |
+| **Missing RAM Metrics in CloudWatch** | CloudWatch Unified Agent was missing permissions to publish to the CWAgent namespace. | Attached `CloudWatchAgentServerPolicy` to the EC2 IAM Instance Profile in `modules/security`. |
+| **Synthetics Canary Ingress Block** | Security group on Public ALB rejected requests from the AWS Lambda Synthetics execution runtime. | Added an explicit ingress rule in `modules/security_groups/alb` permitting standard HTTP/HTTPS traffic. |
+| **Metric Filter False Negatives** | Application log pattern output varied slightly in JSON formatting between environment releases. | Updated filter expression to use flexible token matching: `[..., status = 500, ...]`. |
