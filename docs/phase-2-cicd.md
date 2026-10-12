@@ -166,6 +166,7 @@ Upon merging into main:
 
 ![](images/proof-oidc-auth.png)
 
+<br>
 
 ### Scenario 2: Shift-Left Security Gate Enforces Policy-as-Code
 
@@ -179,6 +180,10 @@ Upon merging into main:
 
 2. The CI workflow fails, setting the PR status check to red and disallowing merge.
 
+![](images/proof-checkov-security-gate.png)
+<br>
+
+
 ### Scenario 3: AWS CodeDeploy Lifecycle Events Validation
 
 - Objective: Confirm that deployment lifecycle hooks execute sequentially and accurately report deployment health.
@@ -186,6 +191,11 @@ Upon merging into main:
 - Execution: Review the deployment history within the AWS CodeDeploy Console for the target Auto Scaling Group.
 
 - Verification Criteria: All deployment phases (ApplicationStop, BeforeInstall, AfterInstall, ApplicationStart, ValidateService) indicate Succeeded status across all target compute nodes.
+
+![](images/proof-codedeploy-events.png)
+
+<br>
+
 
 ### Scenario 4: Zero-Downtime Rolling Deployment Verification
 
@@ -213,7 +223,7 @@ done
 
 - Traffic seamlessly transitions to serving the updated version string upon target group re-registration.
 
-
+![](images/proof-zero-downtime.png)
 <br>
 
 
