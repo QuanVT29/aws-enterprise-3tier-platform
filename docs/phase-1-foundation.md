@@ -6,18 +6,8 @@
 
 The primary objective of Phase 1 is to establish a resilient, highly available, and secure 3-Tier infrastructure foundation inside Amazon Web Services (AWS) using **Terraform**. This tier strictly separates responsibilities across network zones, isolates stateful storage from the public internet, and adheres to a **Zero-Trust operational model** (zero administrative inbound ports open).
 
-```text
-[ Internet Traffic ]
-        │
-        ▼ (HTTPS :443)
-[ Application Load Balancer (ALB) ]        <-- Public Subnets (AZ-A & AZ-B)
-        │
-        ▼ (HTTP Forward :8080)
-[ Auto Scaling Group (EC2 Graviton) ]      <-- Private Application Subnets (AZ-A & AZ-B)
-        │
-        ▼ (TCP :5432 / :3306)
-[ Amazon RDS Multi-AZ DB ]                 <-- Isolated Database Subnets (AZ-A & AZ-B)
-```
+
+
 ---
 ![Phase 1 Architecture](images/phase1-3tier-architecture.png)
 <br>
