@@ -14,23 +14,6 @@ Key capabilities delivered:
 - **Synthetic Availability Probing:** CloudWatch Synthetics Canary executing automated end-to-end HTTP health checks every 60 seconds.
 - **Automated Incident Alerting:** Incident dispatching via Amazon SNS to ChatOps channels (Slack / Discord / Email) with actionable runbooks.
 
-```text
-  [ Synthetic Canary (60s) ] ──(HTTP Probe)──> [ Application Load Balancer ]
-                                                         │
-                                                  (Edge Telemetry)
-                                                         ▼
-  [ EC2 Graviton Cluster ] ──(CW Unified Agent)──> [ CloudWatch Metrics ]
-        │ (App Logs & 500 Errors)                        │
-        ▼                                                ▼
-  [ CloudWatch Logs ] ──(Metric Filter)───> [ CloudWatch Alarms ]
-                                                         │ (State: ALARM)
-                                                         ▼
-                                                [ Amazon SNS Topic ]
-                                                         │
-                                       ┌─────────────────┴─────────────────┐
-                                       ▼                                   ▼
-                              [ Email Notification ]              [ ChatOps: Slack/Discord ]
-```
 
 
 <br>
