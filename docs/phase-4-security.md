@@ -149,7 +149,13 @@ aws-enterprise-3tier-platform/
 
 The security model implements protections across five distinct control planes:
 
-LayerSecurity MechanismThreat AddressedCompliance ControlEdge / PerimeterAWS WAF v2 (CRS, SQLi, Rate Limit)OWASP Top 10, Layer 7 DDoS, Web ScrapersCIS AWS 5.1 / NIST SC-7Network TransitSecurity Group Chaining + VPC EndpointsLateral movement, Data exfiltration over internetCIS AWS 5.2 / NIST AC-4Compute NodeIMDSv2 Enforced + SSM Session ManagerSSRF metadata theft, Open port exploitationCIS AWS 5.4 / NIST IA-2Data at RestAWS KMS CMK (AES-256)Unauthorized disk access, Physical storage theftCIS AWS 2.8 / NIST SC-13Identity & SecretsAWS Secrets Manager (Auto-Rotation)Credential compromise, Hardcoded secretsCIS AWS 1.14 / NIST IA-5
+| Layer | Security Mechanism | Threat Addressed | Compliance Control |
+| :--- | :--- | :--- | :--- |
+| **Edge / Perimeter** | AWS WAF v2 (CRS, SQLi, Rate Limit) | OWASP Top 10, Layer 7 DDoS, Web Scrapers | CIS AWS 5.1 / NIST SC-7 |
+| **Network Transit** | Security Group Chaining + VPC Endpoints | Lateral movement, Data exfiltration over internet | CIS AWS 5.2 / NIST AC-4 |
+| **Compute Node** | IMDSv2 Enforced + SSM Session Manager | SSRF metadata theft, Open port exploitation | CIS AWS 5.4 / NIST IA-2 |
+| **Data at Rest** | AWS KMS CMK (AES-256) | Unauthorized disk access, Physical storage theft | CIS AWS 2.8 / NIST SC-13 |
+| **Identity & Secrets** | AWS Secrets Manager (Auto-Rotation) | Credential compromise, Hardcoded secrets | CIS AWS 1.14 / NIST IA-5 |
 
 
 
