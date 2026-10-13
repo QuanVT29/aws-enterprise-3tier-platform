@@ -325,5 +325,9 @@ Key controls verified:
 
 ## 6. Challenges Encountered & Resolutions
 
-Challenge / VulnerabilityRoot Cause AnalysisRemediationWAF False Positives on Health ProbesThe AWSManagedRulesCommonRuleSet flagged rapid Synthetic Canary health probes as an anomalous scanning tool.Added an explicit WAF rule override with higher priority that excludes the /healthz URI from token inspection.KMS Decryption Failure on Auto ScalingThe Auto Scaling service-linked role lacked permission to invoke kms:CreateGrant on the Customer Managed Key during instance launch.Updated the KMS Key Policy to grant kms:CreateGrant and kms:Decrypt to arn:aws:iam::<ACCOUNT_ID>:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling.Secrets Rotation Connection DropInitial rotation terminated active PostgreSQL connections abruptly when altering the master user password.Configured the Lambda rotation function using a two-user alternating strategy, allowing existing connections to finish before recycling credentials.
+| Challenge / Vulnerability | Root Cause Analysis | Remediation |
+| :--- | :--- | :--- |
+| **WAF False Positives on Health Probes** | The `AWSManagedRulesCommonRuleSet` flagged rapid Synthetic Canary health probes as an anomalous scanning tool. | Added an explicit WAF rule override with higher priority that excludes the `/healthz` URI from token inspection. |
+| **KMS Decryption Failure on Auto Scaling** | The Auto Scaling service-linked role lacked permission to invoke `kms:CreateGrant` on the Customer Managed Key during instance launch. | Updated the KMS Key Policy to grant `kms:CreateGrant` and `kms:Decrypt` to `arn:aws:iam::<ACCOUNT_ID>:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling`. |
+| **Secrets Rotation Connection Drop** | Initial rotation terminated active PostgreSQL connections abruptly when altering the master user password. | Configured the Lambda rotation function using a two-user alternating strategy, allowing existing connections to finish before recycling credentials. |
 
