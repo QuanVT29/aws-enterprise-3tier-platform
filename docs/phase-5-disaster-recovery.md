@@ -1,5 +1,10 @@
 # Phase 5: Multi-Region Disaster Recovery & Automated Failover
 
+
+<br>
+
+
+
 ## 1. Architectural Scope & Objectives
 
 The primary objective of Phase 5 is to establish enterprise-grade **Business Continuity and Disaster Recovery (BCDR)** capabilities by extending the resilient single-region foundation into a **Multi-Region Active-Passive (Warm Standby / Pilot Light)** topology. This architecture guarantees service survival against catastrophic regional outages affecting AWS Region Singapore (`ap-southeast-1`), with automated cross-region traffic redirection to AWS Region Sydney (`ap-southeast-2`).
