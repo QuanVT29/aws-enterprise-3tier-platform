@@ -19,3 +19,9 @@ output "target_group_arn_suffix" {
   description = "ARN Suffix of Target Group for CloudWatch Metric dimension"
   value       = aws_lb_target_group.app.arn_suffix
 }
+
+output "alb_zone_id" {
+  description = "Canonical hosted zone ID of the Application Load Balancer (for Route 53 Alias)"
+  value       = aws_lb.main.zone_id
+}
+

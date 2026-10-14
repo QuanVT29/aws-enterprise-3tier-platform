@@ -38,3 +38,21 @@ output "kms_cmk_arn" {
   description = "ARN of Customer Managed Key (CMK)"
   value       = module.security.kms_key_arn
 }
+
+
+output "db_instance_arn" {
+  description = "ARN of RDS Primary for Cross-Region Replication"
+  value       = module.rds.db_instance_arn
+}
+
+output "instance_profile_name" {
+  description = "IAM Instance Profile for EC2"
+  value       = module.security.instance_profile_name
+}
+
+
+output "db_password" {
+  description = "Database master password for DR replication"
+  value       = module.security.db_generated_password
+  sensitive   = true
+}
