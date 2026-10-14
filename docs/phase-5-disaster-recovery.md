@@ -36,7 +36,7 @@ Key resilience metrics targeted:
 └───────────────────────────────┘                     └───────────────────────────────┘
 ```
 
-
+![](images/phase5-dr-architecture.png)
 
 <br>
 
@@ -177,7 +177,7 @@ aws rds describe-db-instances \
 
 +AWS Console Replication Topology: Confirms prod-dr-sydney-replica (Role: Replica, Region: ap-southeast-2a) is actively Replicating from prod-primary-db (Singapore).
 
-
+![](images/proof-rds-cross-region-replica-1.png) 
 
 <br>
 
