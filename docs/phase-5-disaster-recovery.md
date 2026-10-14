@@ -133,7 +133,13 @@ aws-enterprise-3tier-platform/
 
 - The end-to-end disaster recovery execution progresses through four automated stages:
 
-StageActionExecution MechanismTelemetry / Audit TrailPhase A: Incident DetectionRegional degradation detected via synthetic health checksRoute 53 Health Check (3 failed probes across 30s)Route 53 Alarm transitions to UnhealthyPhase B: Replica PromotionAsynchronous replication stops; replica assumes primary statusAWS CLI: aws rds promote-read-replicaRDS Event: Read replica promoted to standalone instancePhase C: Compute Fleet Scale-OutSecondary ASG expands from Pilot Light to Production capacityAuto Scaling CLI / Terraform dynamic target scalingASG Activity: Launching new EC2 instances to meet target capacityPhase D: Ingress RedirectionDNS resolutions switch worldwide to Sydney ALBRoute 53 automated health check failover switchoverPublic DNS queries resolve to Sydney ALB IPv4 pool
+
+| Stage | Action | Execution Mechanism | Telemetry / Audit Trail |
+| :--- | :--- | :--- | :--- |
+| **Phase A: Incident Detection** | Regional degradation detected via synthetic health checks | Route 53 Health Check (3 failed probes across 30s) | Route 53 Alarm transitions to Unhealthy |
+| **Phase B: Replica Promotion** | Asynchronous replication stops; replica assumes primary status | AWS CLI: `aws rds promote-read-replica` | RDS Event: Read replica promoted to standalone instance |
+| **Phase C: Compute Fleet Scale-Out** | Secondary ASG expands from Pilot Light to Production capacity | Auto Scaling CLI / Terraform dynamic target scaling | ASG Activity: Launching new EC2 instances to meet target capacity |
+| **Phase D: Ingress Redirection** | DNS resolutions switch worldwide to Sydney ALB | Route 53 automated health check failover switchover | Public DNS queries resolve to Sydney ALB IPv4 pool |
 
 
 
