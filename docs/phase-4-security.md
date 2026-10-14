@@ -311,15 +311,17 @@ Overall security compliance score exceeds 85–90%.
 
 Key controls verified:
 
-- 1.16: Ensure IAM policies do not grant full administrative privileges.
+- IAM.1: Ensure IAM policies do not grant full administrative privileges.
 
-- 2.1.1: Ensure S3 buckets block public access.
+- IAM.4: Ensure IAM root user access key does not exist.
 
-- 3.1: Ensure VPC flow logging is enabled.
+- IAM.9: Ensure MFA is enabled for the root user.
 
-- 4.1: Ensure no security groups allow ingress from 0.0.0.0/0 to port 22.
+- CloudTrail.1: Ensure CloudTrail is enabled and configured with a multi-Region trail.
 
-- 5.1: Ensure no Network ACLs allow ingress from 0.0.0.0/0 to remote management ports.
+- EC2.14: Ensure security groups do not allow ingress from 0.0.0.0/0 to port 3389 (RDP).
+
+- KMS.4: Ensure AWS KMS customer managed key rotation is enabled.
 
 
 ![](images/proof-cis-benchmark-score.png)
