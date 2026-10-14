@@ -34,6 +34,7 @@ Key capabilities delivered:
 ```
 
 
+![](images/phase4-security-architecture.png)
 
 <br>
 
@@ -189,7 +190,7 @@ curl -i -s "http://$ALB_URL/?search=<script>alert('xss')</script>"
 
 +The AWS WAF Console displays matching sampled requests tagged under AWS-AWSManagedRulesSQLiRuleSet and AWS-AWSManagedRulesCommonRuleSet.
 
-
+![](images/proof-waf-sqli-block.png) 
 
 <br>
 
@@ -218,6 +219,7 @@ echo ""
 
 +CloudWatch metric BlockedRequests for the Web ACL reflects an immediate upward spike.
 
+![](images/proof-waf-rate-limiting.png)
 
 <br>
 
@@ -249,6 +251,7 @@ aws ec2 describe-volumes \
 
 +The KmsKeyId attribute matches the ARN of the custom KMS CMK provisioned in modules/security/kms.tf.
 
+![](images/proof-kms-cmk-encryption.png) 
 
 <br>
 
@@ -285,7 +288,8 @@ curl -s "http://$ALB_URL/" | grep -i "Database Connection Status"
 
 +The application maintains its connection pool to PostgreSQL, returning Connected to [enterprisedb] without throwing connection errors.
 
-
+![](images/proof-secrets-rotation-1.png)
+![](images/proof-secrets-rotation-2.png)
 <br>
 
 
@@ -318,6 +322,7 @@ Key controls verified:
 - 5.1: Ensure no Network ACLs allow ingress from 0.0.0.0/0 to remote management ports.
 
 
+![](images/proof-cis-benchmark-score.png)
 
 <br>
 
