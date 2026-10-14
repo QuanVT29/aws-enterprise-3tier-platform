@@ -26,3 +26,9 @@ variable "db_password" {
   sensitive   = true
   description = "Database master password"
 }
+
+variable "kms_key_arn" {
+  description = "KMS CMK ARN use for encrypting EBS Volume"
+  type        = string
+  default     = null
+}

@@ -14,6 +14,18 @@ resource "aws_launch_template" "app" {
   image_id      = data.aws_ami.al2023_arm64.id
   instance_type = "t4g.micro"
 
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+    ebs {
+      volume_size           = 20
+      volume_type           = "gp3"
+      encrypted             = true
+      kms_key_id            = var.kms_key_arn
+      delete_on_termination = true
+    }
+  }
+
   iam_instance_profile {
     name = var.instance_profile_name
   }

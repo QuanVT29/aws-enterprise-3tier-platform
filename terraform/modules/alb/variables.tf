@@ -4,7 +4,12 @@ variable "public_subnet_ids" { type = list(string) }
 variable "security_group_ids" { type = list(string) }
 variable "app_port" { default = 8080 }
 
-# --- Available for Phase 4 & Phase 3 ---
+variable "enable_waf" {
+  description = "Toggle to associate WAF with ALB (Phase 4). Default is false."
+  type        = bool
+  default     = false
+}
+
 variable "waf_acl_arn" {
   description = "ARN of WAF Web ACL (Phase 4). Default is null."
   type        = string

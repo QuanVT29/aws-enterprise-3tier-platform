@@ -23,6 +23,7 @@ resource "aws_db_instance" "main" {
   publicly_accessible = false
   skip_final_snapshot = true
   storage_encrypted   = true
+  kms_key_id          = var.kms_key_arn
 
   backup_retention_period = 7
 

@@ -28,3 +28,13 @@ output "incident_sns_topic_arn" {
   description = "ARN of the SNS Topic receiving incident alerts"
   value       = module.observability.sns_topic_arn
 }
+
+output "waf_web_acl_arn" {
+  description = "ARN of AWS WAF Web ACL secure ALB"
+  value       = module.security.waf_acl_arn
+}
+
+output "kms_cmk_arn" {
+  description = "ARN of Customer Managed Key (CMK)"
+  value       = module.security.kms_key_arn
+}

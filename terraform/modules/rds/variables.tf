@@ -8,3 +8,9 @@ variable "db_password" {
 variable "secret_id" { type = string }
 variable "db_name" { default = "enterprisedb" }
 variable "db_user" { default = "cloudadmin" }
+
+variable "kms_key_arn" {
+  description = "KMS CMK ARN use for encrypting RDS Storage"
+  type        = string
+  default     = null
+}

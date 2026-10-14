@@ -19,8 +19,13 @@ module "security_groups" {
 
 # 3. Module Security (IAM Roles + Secrets Manager)
 module "security" {
-  source      = "../../modules/security"
-  environment = var.environment
+  source             = "../../modules/security"
+  environment        = var.environment
+  aws_region         = var.aws_region
+  vpc_id             = module.vpc.vpc_id
+  route_table_ids    = concat([module.vpc.public_route_table_id], module.vpc.private_route_table_ids)
+  private_subnet_ids = module.vpc.private_app_subnet_ids
+  app_sg_id          = module.security_groups.app_sg_id
 }
 
 # 4. Module RDS (Multi-AZ)
@@ -31,6 +36,7 @@ module "rds" {
   security_group_ids = [module.security_groups.rds_sg_id]
   db_password        = module.security.db_generated_password
   secret_id          = module.security.secret_id
+  kms_key_arn        = module.security.kms_key_arn
 }
 
 # 5. Module ALB
@@ -40,6 +46,8 @@ module "alb" {
   vpc_id             = module.vpc.vpc_id
   public_subnet_ids  = module.vpc.public_subnet_ids
   security_group_ids = [module.security_groups.alb_sg_id]
+  enable_waf         = true
+  waf_acl_arn        = module.security.waf_acl_arn
 }
 
 # 6. Module ASG
@@ -51,6 +59,7 @@ module "asg" {
   instance_profile_name = module.security.instance_profile_name
   target_group_arn      = module.alb.target_group_arn
   user_data_path        = "${path.root}/../../../app/scripts/user_data.sh"
+  kms_key_arn           = module.security.kms_key_arn
 
   db_host     = module.rds.endpoint
   db_port     = module.rds.port
