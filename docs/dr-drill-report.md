@@ -40,5 +40,7 @@ This audit document certifies the execution and technical verification of the Mu
 ## 4. Architectural Verification Checkpoints
 
 1. **Cryptographic Integrity:** The promoted Sydney database continued operating seamlessly using the Sydney Customer Managed Key (`alias/prod-dr-cmk`), proving regional cryptographic independence.
+   
 2. **Network Isolation:** Traffic in Sydney remained isolated within the `10.1.0.0/16` VPC, proving no dependencies on Singapore route tables.
+   
 3. **Data Loss Audit:** Comparing table sequence IDs between the last primary transaction in Singapore and the first write in Sydney verified that transactional delta was negligible (< 15 seconds of WAL replication).
