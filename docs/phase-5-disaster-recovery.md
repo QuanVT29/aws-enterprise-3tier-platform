@@ -179,6 +179,8 @@ aws rds describe-db-instances \
 
 ![](images/proof-rds-cross-region-replica-1.png) 
 
+![](images/proof-rds-cross-region-replica-2.png) 
+
 <br>
 
 
@@ -200,7 +202,9 @@ aws rds describe-db-instances \
 
 +Global checker regions active: US East (N. Virginia), US West (N. California), US West (Oregon), Asia Pacific (Tokyo), Asia Pacific (Singapore), Asia Pacific (Sydney), EU (Ireland), South America (Sao Paulo).
 
+![](images/proof-route53-healthcheck-1.png)
 
+![](images/proof-route53-healthcheck-2.png)
 
 
 <br>
@@ -230,7 +234,7 @@ chmod +x scripts/trigger-dr-failover.sh
 
 +Measured Operational RTO: 5m 22s (drastically outperforming the 15-minute SLA target).
 
-
+![](images/proof-dr-failover-execution.png)
 
 <br>
 
@@ -253,7 +257,7 @@ chmod +x scripts/trigger-dr-failover.sh
 
 +Engine: PostgreSQL on db.t4g.micro located in ap-southeast-2a
 
-
+![](images/proof-replica-promotion.png)
 
 
 
@@ -290,6 +294,8 @@ curl -i http://<FAILOVER-DOMAIN-OR-ALB>/
 
 - Target RPO: < 5 minutes $\rightarrow$ Actual: < 15 seconds (ACHIEVED).
 
+
+![](images/proof-dr-traffic-switch.png)
 
 <br>
 
