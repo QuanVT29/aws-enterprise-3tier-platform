@@ -188,6 +188,8 @@ aws rds describe-db-instances \
 
 <br>
 
+<br>
+
 
 ### Scenario 2: Route 53 Health Checking & Active-Passive Policy
 
@@ -211,6 +213,8 @@ aws rds describe-db-instances \
 
 ![](images/proof-route53-healthcheck-2.png)
 
+
+<br>
 
 <br>
 
@@ -243,6 +247,8 @@ chmod +x scripts/trigger-dr-failover.sh
 
 <br>
 
+<br>
+
 
 ### Scenario 4: Promotion of Read Replica to Standalone Primary
 
@@ -265,6 +271,7 @@ chmod +x scripts/trigger-dr-failover.sh
 ![](images/proof-replica-promotion.png)
 
 
+<br>
 
 <br>
 
@@ -304,7 +311,7 @@ curl -i http://<FAILOVER-DOMAIN-OR-ALB>/
 
 <br>
 
-
+<br>
 
 
 ### 6. Challenges Encountered & Resolutions
