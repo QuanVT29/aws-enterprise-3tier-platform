@@ -146,6 +146,9 @@ Upon merging into main:
 
 <br>
 
+<br>
+
+
 ### Scenario 2: Shift-Left Security Gate Enforces Policy-as-Code
 
 - Objective: Prove that the pipeline actively intercepts insecure infrastructure code before deployment.
@@ -159,6 +162,10 @@ Upon merging into main:
 2. The CI workflow fails, setting the PR status check to red and disallowing merge.
 
 ![](images/proof-checkov-security-gate.png)
+
+
+<br>
+
 <br>
 
 
@@ -171,6 +178,8 @@ Upon merging into main:
 - Verification Criteria: All deployment phases (ApplicationStop, BeforeInstall, AfterInstall, ApplicationStart, ValidateService) indicate Succeeded status across all target compute nodes.
 
 ![](images/proof-codedeploy-events.png)
+
+<br>
 
 <br>
 
@@ -202,6 +211,9 @@ done
 - Traffic seamlessly transitions to serving the updated version string upon target group re-registration.
 
 ![](images/proof-zero-downtime.png)
+
+<br>
+
 <br>
 
 
