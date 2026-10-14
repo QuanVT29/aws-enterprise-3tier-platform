@@ -142,41 +142,6 @@ aws-enterprise-3tier-platform/
 <br>
 
 
-## 🧪 Verification & Real-World Drill Scenarios
-
-To prove production reliability, the following scenarios were tested and documented:
-
-1. High Availability Auto-Recovery (Phase 1)
-Method: Terminated an EC2 instance directly inside the AWS Management Console during peak mock traffic.
-
-Result: ALB health check tagged the target unhealthy within 10 seconds; Route 53 and ALB routed 100% of user traffic to remaining healthy instances across AZ-B. The ASG provisioned a replacement t4g.micro node via Launch Template without dropping sessions.
-
-2. RDS Multi-AZ Seamless Failover (Phase 1)
-Method: Executed aws rds reboot-db-instance --db-instance-identifier prod-db --force-failover.
-
-Result: Primary DB role shifted from AZ-A to synchronous standby in AZ-B. The application re-established database connection pool in 42 seconds, with zero data loss.
-
-3. Shift-Left Security Pipeline Gate (Phase 2)
-Method: Opened a test Pull Request containing a Security Group allowing open inbound access (0.0.0.0/0:22).
-
-Result: Checkov failed in the GitHub Actions workflow, terminating the pipeline and blocking branch merge.
-
-4. Stress Testing & Dynamic Auto Scaling (Phase 3)
-Method: Generated artificial CPU stress using an internal diagnostic endpoint (/api/stress-cpu) targeting >80% utilization.
-
-Result: CloudWatch Alarm triggered after 2 evaluation periods; SNS notified AWS Chatbot in Slack; ASG scaled out from 2 instances to 4 instances automatically.
-
-5. Application Layer DDoS & SQL Injection Blocking (Phase 4)
-Method: Executed malicious curl payloads simulating SQL Injection (/?id=1' OR '1'='1) and high-volume burst traffic (>300 req/min).
-
-Result: AWS WAF v2 inspected requests at the perimeter, returning HTTP 403 Forbidden before packets reached the compute cluster.
-
-6. Full Cross-Region Disaster Recovery Drill (Phase 5)
-Method: Simulated complete regional outage by cutting ingress traffic at Singapore (ap-southeast-1) ALB.
-
-Result: Route 53 Health Check reported failure at 01:14; DNS redirected incoming requests to the Sydney (ap-southeast-2) pilot-light infrastructure. Total measured RTO: 7 minutes, 12 seconds; verified RPO: 11 seconds. Full details documented in DR Drill Report.
-
-<br>
 
 
 ## 💰 FinOps & Cost Optimization Strategy
@@ -250,6 +215,6 @@ Role: Cloud Engineer / Devops Engineer
 
 Certifications: AWS Certified Solutions Architect – Associate (SAA)
 
-Contact: LinkedIn Profile • Personal Portfolio
+Contact: www.linkedin.com/in/quân-vt-243752337
 │
 
