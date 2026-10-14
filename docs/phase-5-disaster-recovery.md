@@ -300,7 +300,7 @@ curl -i http://<FAILOVER-DOMAIN-OR-ALB>/
 
 - Database Connectivity: Connected to [enterprisedb] verified at Wed Oct 14 2026 18:18:40 GMT+0000.
 
-##### SLA Benchmark Compliance:
+#### SLA Benchmark Compliance:
 
 - Target RTO: < 15 minutes $\rightarrow$ Actual: 5 minutes 22 seconds (ACHIEVED).
 
