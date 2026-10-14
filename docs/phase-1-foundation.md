@@ -142,7 +142,12 @@ aws ssm start-session --target "$INSTANCE_ID"
 - Verification Criteria: Interactive shell session connects successfully. Port 22 connectivity tests to the host return connection timeouts or refused packets.
   
 ![SSM Session Manager Terminal](images/proof-ssm-session.png)
+
+
 <br>
+
+<br>
+
 
 ### Scenario 2: EC2 Auto-Healing & Multi-AZ Rebalancing
 
@@ -170,6 +175,10 @@ aws ec2 terminate-instances --instance-ids "$INSTANCE_ID"
 
 <br>
 
+
+<br>
+
+
 ### Scenario 3: Automated Synchronous RDS Multi-AZ Failover
 
 - Objective: Induce a database disaster to verify automated recovery and measure exact failover latency
@@ -186,6 +195,9 @@ aws rds reboot-db-instance \
 ![RDS Failover Events Log](images/proof-rds-failover-events.png)
 
 <br>
+
+<br>
+
 
 ### Scenario 4: Strict Network Layer Isolation Audit
 
