@@ -260,6 +260,10 @@ curl -i http://<FAILOVER-DOMAIN-OR-ALB>/
 
 
 
-## 6. Challenges Encountered & Resolutions
+### 6. Challenges Encountered & Resolutions
 
-Challenge / Drift FactorRoot Cause AnalysisRemediationKMS Cross-Region Decryption RejectionRDS Read Replica in Sydney failed to start because it could not decrypt transactional logs encrypted with the Singapore CMK.Provisioned a dedicated KMS CMK in ap-southeast-2 and supplied kms_key_id directly in the replica resource block.Route 53 DNS Cache LatencyLocal client DNS resolvers cached primary IP addresses beyond the expected failover window.Reduced DNS TTL on the Route 53 Failover record sets from 300 seconds to 60 seconds.Connection Pooling Timeouts During DB PromotionWeb applications threw transient connection errors during the 60-second promotion transition window.Implemented retry and exponential backoff connection logic in server.js database pool initialization.
+| Challenge / Drift Factor | Root Cause Analysis | Remediation |
+| :--- | :--- | :--- |
+| **KMS Cross-Region Decryption Rejection** | RDS Read Replica in Sydney failed to start because it could not decrypt transactional logs encrypted with the Singapore CMK. | Provisioned a dedicated KMS CMK in `ap-southeast-2` and supplied `kms_key_id` directly in the replica resource block. |
+| **Route 53 DNS Cache Latency** | Local client DNS resolvers cached primary IP addresses beyond the expected failover window. | Reduced DNS TTL on the Route 53 Failover record sets from 300 seconds to 60 seconds. |
+| **Connection Pooling Timeouts During DB Promotion** | Web applications threw transient connection errors during the 60-second promotion transition window. | Implemented retry and exponential backoff connection logic in `server.js` database pool initialization. |
