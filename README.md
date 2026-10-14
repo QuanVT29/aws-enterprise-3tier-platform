@@ -39,6 +39,9 @@ The system utilizes a 3-tier decoupled design spanning across multiple Availabil
 
 ![System Architecture](docs/images/architecture-diagram.png)
 
+<br>
+
+
 ### 2. End-to-End Implementation & Delivery Pipeline
 Infrastructure, security gates, application deployment, observability, and failover pathways are organized across five systematic phases:
 
