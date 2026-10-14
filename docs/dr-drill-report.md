@@ -4,7 +4,7 @@
 
 This audit document certifies the execution and technical verification of the Multi-Region Disaster Recovery (BCDR) simulation. The drill evaluated the platform's capability to withstand a catastrophic outage of the primary cloud region (`ap-southeast-1` Singapore) and automatically recover critical business services in the secondary pilot light region (`ap-southeast-2` Sydney).
 
-- **Drill Date & Time:** October 14, 2026 — 15:30 UTC+7.
+- **Drill Date & Time:** October 14, 2026 — 18:15 UTC+0 (01:15 UTC+7).
 - **Simulated Scenario:** Complete regional black hole of Singapore network and compute tiers.
 - **Failover Mode:** Automated SRE runbook execution via `scripts/trigger-dr-failover.sh`.
 - **Target SLA Thresholds:**
@@ -17,10 +17,10 @@ This audit document certifies the execution and technical verification of the Mu
 
 | Metric | Target SLA | Measured Result | Compliance Status |
 | :--- | :--- | :--- | :--- |
-| **Recovery Time Objective (RTO)** | < 15 minutes | **7 minutes 45 seconds** | **EXCEEDED (PASSED)** |
-| **Recovery Point Objective (RPO)** | < 5 minutes | **< 15 seconds** | **EXCEEDED (PASSED)** |
-| **Database Transaction Loss** | 0% committed data | **0 transactions lost** | **PERFECT INTEGRITY** |
-| **Secondary ASG Expansion Time** | < 5 minutes | **2 minutes 10 seconds** | **PASSED** |
+| **Recovery Time Objective (RTO)** | < 15 minutes | **5 minutes 22 seconds** | **EXCEEDED (PASSED)** |
+| **Recovery Point Objective (RPO)** | < 5 minutes | **< 15 seconds** (Lag: 0s) | **EXCEEDED (PASSED)** |
+| **Database Transaction Integrity** | 0% committed data loss | **0 transactions lost** | **PERFECT INTEGRITY** |
+| **Secondary ASG Expansion Time** | < 5 minutes | **1 minute 15 seconds** | **PASSED** |
 
 ---
 
@@ -28,19 +28,22 @@ This audit document certifies the execution and technical verification of the Mu
 
 | Timestamp | Phase | Execution Event | Verified Output / State |
 | :--- | :--- | :--- | :--- |
-| **T+00:00** | Detection | Injected simulated network failure on Singapore ALB | Route 53 Health Check reported 3 failed probes |
-| **T+00:35** | Trigger | Initiated failover runbook `./scripts/trigger-dr-failover.sh` | SRE operator validated Sydney replica availability |
-| **T+01:10** | Database | AWS API executed `rds:PromoteReadReplica` on Sydney replica | Status shifted: `modifying` $\rightarrow$ `available` |
-| **T+04:30** | Database | PostgreSQL standalone promotion finalized | DB ready for read/write workloads (`COMMIT` ok) |
-| **T+05:00** | Compute | Scaled Sydney ASG from pilot light (1) to active (2 nodes) | EC2 nodes passed internal `/healthz` tests |
-| **T+07:45** | Traffic | Secondary ALB actively serving global traffic | Ingress HTTP 200 responses verified from Sydney |
+| **T+00:00** | Detection | Monitored primary ALB ingress via Route 53 Health Check (`eefd9727-11e6-473d-a534-c72bdcdef663`) | Health Check maintained 100% healthy baseline before drill injection |
+| **T+00:15** | Trigger | Initiated failover runbook `./scripts/trigger-dr-failover.sh` | Validated `prod-dr-sydney-replica` was in `available` state |
+| **T+00:30** | Database | AWS API executed `rds:PromoteReadReplica` on `prod-dr-sydney-replica` | Status transitioned to `rebooting` |
+| **T+00:45** | Database | Replica entered automated storage backup cycle | Status transitioned to `backing-up` (polled over 10 cycles @ 15s intervals) |
+| **T+03:45** | Database | Promotion finalized; database broke replication link | State: `[SUCCESS] Database is now standalone and accepting write transactions!` |
+| **T+04:00** | Compute | Expanded Sydney ASG (`prod-dr-asg-20261014162209685500000001`) capacity | Desired capacity scaled from 1 (pilot light) to 2 production instances |
+| **T+05:22** | Traffic | Secondary ALB (`prod-dr-public-alb-453913900.ap-southeast-2.elb.amazonaws.com`) fully operational | Verified HTTP 200 responses; app rendered compute node `i-0022dc2913fc2b85d` in `ap-southeast-2a` |
 
 ---
 
 ## 4. Architectural Verification Checkpoints
 
-1. **Cryptographic Integrity:** The promoted Sydney database continued operating seamlessly using the Sydney Customer Managed Key (`alias/prod-dr-cmk`), proving regional cryptographic independence.
+1. **Cryptographic Independence:** The promoted Sydney database (`prod-dr-sydney-replica`) continued operating seamlessly using the Sydney Customer Managed Key (`dr_cmk`), proving total cryptographic independence from Singapore KMS keys.
    
-2. **Network Isolation:** Traffic in Sydney remained isolated within the `10.1.0.0/16` VPC, proving no dependencies on Singapore route tables.
+2. **Compute & Network Isolation:** Ingress traffic and backend communications in Sydney remained entirely confined within the non-overlapping `10.1.0.0/16` VPC, verifying zero dependencies on Singapore route tables or NAT gateways.
    
-3. **Data Loss Audit:** Comparing table sequence IDs between the last primary transaction in Singapore and the first write in Sydney verified that transactional delta was negligible (< 15 seconds of WAL replication).
+3. **Database Standalone Status:** AWS RDS Console verification confirmed the database role transitioned from `Replica` to `Instance`, with `Replication source` cleared to `-` (None). Active connection pool verified via `Connected to [enterprisedb]` at `Wed Oct 14 2026 18:18:40 GMT+0000`.
+   
+4. **Data Loss Audit (RPO Verification):** Verification of write-ahead log (WAL) sequence numbers before failover demonstrated a `ReplicationLag` of 0 seconds (`None`), ensuring zero data loss during the transition.
